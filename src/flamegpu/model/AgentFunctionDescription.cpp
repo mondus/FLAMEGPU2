@@ -388,7 +388,10 @@ void AgentFunctionDescription::setRTCFunctionCondition(std::string func_cond_src
     }
 
     // append jitify program string and include
-    std::string func_cond_src_str = std::string(func_cond_name + "_program\n").append("#include \"flamegpu/runtime/DeviceAPI.cuh\"\n").append(func_cond_src);
+    std::string func_cond_src_str = std::string(func_cond_name + "_program\n").append("#include \"flamegpu/runtime/DeviceAPI.cuh\"\n");
+    // Append line pragma to correct file/line number in same format as OUTPUT_RTC_DYNAMIC_FILES
+    func_cond_src_str = func_cond_src_str.append("#line 1 \"").append(function->rtc_func_name).append("_impl_condition.cu\"\n");
+    func_cond_src_str = func_cond_src_str.append(func_cond_src);
 
     // update the agent function data
     function->rtc_func_condition_name = func_cond_name;
@@ -500,6 +503,8 @@ AgentFunctionDescription& AgentDescription::newRTCFunction(const std::string& fu
                     std::string out_type_include_name = out_type_name.substr(in_type_name.find_last_of("Msg") + 1);
                     func_src_str = func_src_str.append("#include \"flamegpu/runtime/messaging/"+ out_type_include_name + "/" + out_type_include_name + "Device.cuh\"\n");
                 }
+                // Append line pragma to correct file/line number in same format as OUTPUT_RTC_DYNAMIC_FILES
+                func_src_str = func_src_str.append("#line 1 \"").append(code_func_name).append("_impl.cu\"\n");
                 // Append the function source
                 func_src_str = func_src_str.append(func_src);
                 auto rtn = std::shared_ptr<AgentFunctionData>(new AgentFunctionData(this->agent->shared_from_this(), function_name, func_src_str, in_type_name, out_type_name, code_func_name));
