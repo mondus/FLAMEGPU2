@@ -31,9 +31,6 @@ FLAMEGPU_AGENT_FUNCTION(update, flamegpu::MsgArray2D, flamegpu::MsgNone) {
     return flamegpu::ALIVE;
 }
 int main(int argc, const char ** argv) {
-
-    printf("FILE LINE %s:%d\n", __FILE__, __LINE__);
-
     const unsigned int SQRT_AGENT_COUNT = 1000;
     const unsigned int AGENT_COUNT = SQRT_AGENT_COUNT * SQRT_AGENT_COUNT;
     NVTX_RANGE("main");
