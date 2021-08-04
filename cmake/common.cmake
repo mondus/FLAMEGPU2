@@ -32,6 +32,7 @@ mark_as_advanced(CMAKE_USE_FOLDERS)
 # Include files which define target specific functions.
 include(${CMAKE_CURRENT_LIST_DIR}/warnings.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cxxstd.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/embedded_paths.cmake)
 
 # Cmake 3.16 has an issue with the order of CUDA includes when using SYSTEM for user-provided thrust. Avoid this by not using SYSTEM for cmake 3.16
 set(INCLUDE_SYSTEM_FLAG SYSTEM)
@@ -256,6 +257,7 @@ function(add_flamegpu_executable NAME SRC FLAMEGPU_ROOT PROJECT_ROOT IS_EXAMPLE)
 
     # Set target level warnings.
     EnableCompilerWarnings(TARGET "${NAME}")
+    TargetStripBuildDirectoryInformation(TARGET "${NAME}")
     
     # @todo - Once public/private/interface is perfected on the library, some includes may need adding back here.
 
@@ -382,6 +384,7 @@ function(add_flamegpu_library NAME SRC FLAMEGPU_ROOT)
 
     # Set target level warnings.
     EnableCompilerWarnings(TARGET "${NAME}")
+    TargetStripBuildDirectoryInformation(TARGET "${NAME}")
 
     # enable "fpic" for linux to allow shared libraries to be build from the static library (required for swig)
     set_property(TARGET ${NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
